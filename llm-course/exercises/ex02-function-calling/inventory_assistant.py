@@ -33,9 +33,10 @@ INVENTORY = {
 
 # TODO-1【核心】写查询函数：按 spec 查字典，查到返回整条记录（dict），查不到返回错误 dict
 def query_inventory(spec: str):
-    # for data in INVENTORY:
-    #     if spec.__eq__(data[])
-    pass
+    if spec in INVENTORY:
+        return INVENTORY[spec]
+    else:
+        return None
 
 
 
@@ -44,11 +45,29 @@ def query_inventory(spec: str):
 # description 要让模型明白：什么时候该调这个函数、参数是什么意思
 TOOLS = [
     # 你来写
+    {
+        "type":"function",
+        "function":{
+            "name":"query_inventory",
+            "description":"这是一个根据规格型号查询物资详细信息的方法，用户传入物资的规格型号，返回物资详细信息（名称，数量，单位，位置，单价，严格按照这个返回，禁止增加或者减少字段）。在用户询问物资库存，并传入规格型号时调用",
+            "parameters":{
+                "type":"object",
+                "properties": {
+                    "spec":{
+                        "type":"string",
+                        "description":"物资的规格型号，如L-324等"
+                    }
+                },
+                "required":["spec"]
+            }
+
+        }
+    }
 ]
 
 # TODO-3【简单】system 提示词：告诉模型它是"物资库存助手"，用中文简洁回答
 SYSTEM_PROMPT = """
-（你来写）
+你是一个掌管物资数据的物资库存助手，擅长用中文总结物资数据并简洁回答
 """
 
 
@@ -60,7 +79,11 @@ def execute_tool_call(tool_call):
       tool_call.function.arguments  → 参数（JSON 字符串，需要 json.loads）
     返回：函数执行结果的 JSON 字符串（ensure_ascii=False 保留中文）
     """
-    pass
+    print(f"函数名：{tool_call.function.name}")
+    print(f"参数：{tool_call.function.arguments}")
+    args=json.loads(tool_call.function.arguments)
+    result=query_inventory(args['spec'])
+    return json.dumps(result,ensure_ascii=False)
 
 
 def chat_once(messages: list):
@@ -97,8 +120,21 @@ if __name__ == "__main__":
             #   2. 对每个 tool_call 调 execute_tool_call，把结果按
             #      {"role": "tool", "tool_call_id": ..., "content": ...} append 进 messages
             #   3. 带完整 messages 再调一次 chat_once，打印最终回答
-            pass
+            messages.append(choice.message)
+            # 2. 处理每张申请单，回传结果
+            for tool_call in choice.message.tool_calls:
+
+                result_str = execute_tool_call(tool_call)  # 传的是申请单对象！
+                messages.append({
+                    "role": "tool",
+                    "tool_call_id": tool_call.id,  # 申请单编号，必须对上
+                    "content": result_str,
+                })
+            # 3. 带完整历史再问一次
+            response2 = chat_once(messages)
+            print(response2.choices[0].message.content)
+
         else:
             # TODO-6【简单】普通回答：把模型回复打印出来，
             #   并把这条 assistant 消息 append 进 messages（多轮对话的记忆，还记得吗）
-            pass
+            print(choice.message.content)

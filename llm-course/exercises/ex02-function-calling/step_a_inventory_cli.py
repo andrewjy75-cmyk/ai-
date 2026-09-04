@@ -53,4 +53,4 @@ if __name__ == "__main__":
             if item is None:
                 print("查无此物")
             else:
-                print(f"{item['name']} | {item['quantity']} | {item['unit']} | {item['location']} | {item['price']}")
+                print(f"名称：{item['name']} | 数量：{item['quantity']} | 单位：{item['unit']} | 位置：{item['location']} | 单价：{item['price']}")

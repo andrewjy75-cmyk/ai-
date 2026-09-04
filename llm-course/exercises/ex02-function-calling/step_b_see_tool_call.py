@@ -74,7 +74,8 @@ def peek_tool_call(question: str):
 
         # TODO-B1【3行】把 arguments（JSON字符串）用 json.loads 转成 dict，
         #   打印 args["spec"] 的值
-        pass
+        item=json.loads(tool_call.function.arguments)
+        print(item["spec"])
     else:
         # 模型认为不需要调函数，直接回答了
         print("模型直接回答：", choice.message.content)
@@ -85,4 +86,7 @@ if __name__ == "__main__":
     #   "轴承 6204 还有多少个？"   （应该触发 tool_calls）
     #   "液压油多少钱一桶？"       （应该触发 tool_calls，注意模型自己会从 INVENTORY 的键里挑 L-HM46）
     #   "你是谁？"                （不应该触发——观察 finish_reason 是什么）
+    peek_tool_call("轴承 6204 还有多少个？")
+    peek_tool_call("液压油多少钱一桶？")
+    peek_tool_call("你是谁？")
     pass
