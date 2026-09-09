@@ -62,7 +62,7 @@ async def index():
     """访问根路径时返回网页"""
     # TODO-C1【简单】用 FileResponse 返回 index.html
     #   提示：FileResponse(BASE_DIR / "index.html")
-    pass
+    return  FileResponse(BASE_DIR / "index.html")
 
 
 # TODO-C2【简单】挂载静态资源目录（可选，如果有 css/js 文件的话）

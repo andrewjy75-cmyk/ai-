@@ -59,6 +59,29 @@
             //       assistantDiv.textContent += 清洗后的正文;
             //       滚动到底部 msgBox.scrollTop = msgBox.scrollHeight;
             //     }
+            const resp = await fetch("/chat", {                       // ① 向 /chat 发请求
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({question: question}),           // 把问题序列化成 JSON
+            });
+            const reader = resp.body.getReader();                     // ② 拿到响应体的"流读取器"
+            const decoder = new TextDecoder();                        // ③ 字节→中文的翻译器
+
+            while (true) {
+                const {done, value} = await reader.read();            // ④ 读一小块（可能一次收到好几条）
+                if (done) break;                                      // 流结束了
+                const text = decoder.decode(value);                   // ⑤ 字节翻译成文字
+
+                text.split("\n").forEach(line => {                    // ⑥ 按行切开（可能一条含多块）
+                    if (line.startsWith("data:")) {                   // ⑦ 只认 data: 开头的行
+                        const content = line.slice(5);                // ⑧ 切掉 "data:" 这 5 个字符
+                        if (content) {                                // 跳过空行
+                            assistantDiv.textContent += content;      // ⑨ 追加进回答区 → 打字机！
+                        }
+                    }
+                });
+                msgBox.scrollTop = msgBox.scrollHeight;               // ⑩ 自动滚到底部
+            }
         }
 
         // 回车发送
