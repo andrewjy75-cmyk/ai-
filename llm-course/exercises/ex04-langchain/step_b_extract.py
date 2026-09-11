@@ -20,7 +20,12 @@ from langchain_openai import ChatOpenAI
 load_dotenv()
 
 # TODO-B1【简单】创建 ChatOpenAI（照台阶 A），temperature=0（提取要稳定）
-llm = None   # ← 你来改
+llm = ChatOpenAI(
+    base_url=os.getenv('NEWAPI_BASE_URL'),
+    model=os.getenv('NEWAPI_MODEL'),
+    api_key=os.getenv('NEWAPI_API_KEY'),
+    temperature=0
+)   # ← 你来改
 
 # ---------- 输入数据（练习 01 的领料记录） ----------
 RAW_TEXT = """
@@ -36,18 +41,23 @@ RAW_TEXT = """
 #         ("system", "你是物资领用记录的结构化助手。{rules}"),
 #         ("user", "###\n{raw_text}\n###\n请提取领用条目，只返回JSON数组。"),
 #     ])
-prompt = None   # ← 你来改
+prompt = ChatPromptTemplate.from_messages([
+    ("system","你是一个物资数据领用小助手，擅长帮我结构化数据。{rules}"),
+    ("user","###\n{raw_text}\n###请提取领用条目，只返回JSON数组。"),]
+)   # ← 你来改
 
 # TODO-B3【核心】组装链：prompt | llm | StrOutputParser()
 #   管道符 | 表示数据从左流到右，前一个的输出自动成为下一个的输入
 #   参考：chain = prompt | llm | StrOutputParser()
-chain = None    # ← 你来改
+chain = prompt | llm | StrOutputParser()    # ← 你来改
 
 # TODO-B4【核心】调用链
 #   chain.invoke({...}) 传一个 dict，填满模板里的所有 {变量}
 #   返回的就是纯文本（StrOutputParser 已经把 .content 取出来了）
 #   然后 json.loads 解析成列表打印
-text = None     # ← 你来改
+text = chain.invoke({"rules":"返回json数组格式严格按照[{\"material_name\":\"螺母\",\"quantity\":2,\"unit\":\"个\",\"person\":\"老刘\"}]"
+                             "禁止增加或者减少字段，模糊不清的数据就填未知，数量模糊不清的话，就默认0，必须填数字。","raw_text":RAW_TEXT
+                     })     # ← 你来改
 
 # ---------- 打印（已给你） ----------
 if __name__ == "__main__":

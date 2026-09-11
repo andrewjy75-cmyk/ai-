@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <title>AI 聊天（参考答案）</title>
+    <style>
+        body { font-family: sans-serif; max-width: 700px; margin: 40px auto; }
+        #messages { border: 1px solid #ddd; height: 400px; overflow-y: auto;
+                    padding: 10px; border-radius: 8px; background: #fafafa; }
+        .msg { margin: 8px 0; }
+        .user { text-align: right; color: #1a73e8; }
+        .assistant { white-space: pre-wrap; }
+        #input-area { display: flex; gap: 8px; margin-top: 10px; }
+        #question { flex: 1; padding: 8px; font-size: 14px; }
+        button { padding: 8px 16px; }
+    </style>
+</head>
+<body>
+    <h2>🤖 AI 助手（逐字输出）</h2>
+    <div id="messages"></div>
+    <div id="input-area">
+        <input id="question" placeholder="输入你的问题，回车发送" />
+        <button onclick="send()">发送</button>
+    </div>
+
+    <script>
+        async function send() {
+            const input = document.getElementById("question");
+            const question = input.value.trim();
+            if (!question) return;
+            input.value = "";
+
+            // 用户问题上屏
+            const msgBox = document.getElementById("messages");
+            const userDiv = document.createElement("div");
+            userDiv.className = "msg user";
+            userDiv.textContent = question;
+            msgBox.appendChild(userDiv);
+
+            // 准备回答区
+            const assistantDiv = document.createElement("div");
+            assistantDiv.className = "msg assistant";
+            msgBox.appendChild(assistantDiv);
+
+            // ① fetch POST /chat
+            const resp = await fetch("/chat", {
+                method: "POST",
+                headers: {"Content-Type": "application/json"},
+                body: JSON.stringify({question: question}),
+            });
+
+            // ② 拿响应体的"流读取器"
+            const reader = resp.body.getReader();
+            const decoder = new TextDecoder();
+
+            // ③ 循环读流：每读一块 → 解码 → 拆 SSE → 追加上屏
+            while (true) {
+                const {done, value} = await reader.read();
+                if (done) break;                 // 服务器关连接，流结束
+                const text = decoder.decode(value);   // 字节 → 文字
+
+                // 拆包：一次可能收到多条 data:xxx\n\n，按行切开逐条处理
+                text.split("\n").forEach(line => {
+                    if (line.startsWith("data:")) {
+                        const content = line.slice(5);   // 去掉 data: 前缀
+                        if (content) {
+                            assistantDiv.textContent += content;   // 打字机！
+                        }
+                    }
+                });
+                msgBox.scrollTop = msgBox.scrollHeight;   // 自动滚到底
+            }
+        }
+
+        // 回车发送
+        document.getElementById("question").addEventListener("keydown", (e) => {
+            if (e.key === "Enter") send();
+        });
+    </script>
+</body>
+</html>

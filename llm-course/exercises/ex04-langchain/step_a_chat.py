@@ -12,6 +12,7 @@ r"""
 import os
 
 from dotenv import load_dotenv
+from langchain_openai import ChatOpenAI
 
 load_dotenv()
 
@@ -20,10 +21,16 @@ load_dotenv()
 #   temperature 也直接传
 # 对比：手写版要 new OpenAI(...) 再 client.chat.completions.create
 #       LangChain 版一个对象搞定
-llm = None   # ← 你来改
+llm = ChatOpenAI(
+    base_url=os.getenv('newapi_base_url'),
+    api_key=os.getenv('newapi_api_key'),
+    model=os.getenv('newapi_model'),
+    temperature=0.5
+)   # ← 你来改
 
 if __name__ == "__main__":
     # TODO-A2【简单】用 llm.invoke("...") 提问，打印 .content
     # 对比：手写版是 client.chat.completions.create(model=..., messages=...)
     #       然后 response.choices[0].message.content
-    pass
+    rep=llm.invoke('用一句话解释什么是API')
+    print(rep.content)

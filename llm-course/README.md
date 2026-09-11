@@ -14,24 +14,57 @@
 | 2 | Prompt 实战技巧 + 结构化输出（让模型返回 JSON） | 信息提取小工具 | ✅ |
 | 3 | Function Calling：让模型调你的函数 | 库存查询助手 | ✅ |
 | 4 | 流式输出 + FastAPI 包成接口 + 简单网页 | 网页打字机 demo | ✅ |
-| 5 | LangChain 框架上手：链、提示模板、记忆 | 用框架重写前面的功能 | ⬜ 下一步 |
-| 6 | RAG 实战：文档切分 + 向量库（Chroma）+ 问答 | 物资系统文档问答库 | ⬜ |
+| 5 | LangChain 框架上手：链、提示模板、记忆 | 用框架重写前面的功能 | ✅ |
+| 6 | RAG 实战：文档切分 + 向量库（Chroma）+ 问答 | 物资系统文档问答库 | ⏳ 下一步 |
 | 7 | Agent 实战：给模型配工具，让它自己多步干活 | 物资智能查询助手 | ⬜ |
 | 8 | 工程化收尾：配置管理、日志、成本控制、部署 | 可部署的完整应用 | ⬜ |
 
 > 路线里没有任何"训练模型、微调、神经网络原理"——那些是算法工程师的事。
 > 我们全程只做一件事：**把现成大模型的能力接进自己的系统**。
 
-## 课程目录
+## 课程目录（三个文件夹怎么用）
 
-- `lessons/lesson00-python-crash.md` — 给 Java 程序员的 Python 速成（30 分钟）
-- `lessons/lesson00b-fstring.md` — f-string 字符串格式化专讲
-- `lessons/lesson01b-messages-roles.md` — messages 三角色（system/user/assistant）专讲
-- `lessons/lesson01-first-call/` — 第 1 课：第一次调用大模型 ✅
-- `exercises/ex01-structured-output/` — 练习 01：结构化信息提取器 ✅
-- `exercises/ex02-function-calling/` — 练习 02：Function Calling 库存查询助手 ✅
-- `exercises/ex03-streaming-web/` — 练习 03：流式输出 + FastAPI 网页聊天 ✅
-- `solutions/` — 参考答案目录（写完跑通再看！）
+```
+llm-course/
+├── lessons/     讲义 & 概念专讲（做题前先读）——编号 = 服务哪个练习
+├── exercises/   练习题（动手写代码的地方）——每题含题面/骨架/提示阶梯
+└── solutions/   参考答案（写完跑通或卡死 30 分钟才准看！）
+```
+
+### lessons/（讲义——先读，再动手）
+
+| 文件 | 内容 | 做题前读 |
+|---|---|---|
+| `lesson00-python-crash.md` | 给 Java 程序员的 Python 速成 | 所有练习 |
+| `lesson00b-fstring.md` | f-string 格式化专讲 | ex01 前 |
+| `lesson00c-triquotes-vs-messages.md` | 三引号 vs messages 列表 | ex01 前 |
+| `lesson01b-messages-roles.md` | messages 三角色（system/user/assistant） | ex01 前 |
+| `lesson02a-fc-prep.md` | Function Calling 前置知识①（字典/json/while） | ex02 前 |
+| `lesson02b-fc-code-walkthrough.md` | Function Calling 前置②（四个核心概念） | ex02 台阶C 前 |
+| `lesson02c-todo5-walkthrough.md` | TODO-5 逐行拆解（工具回合） | ex02 卡壳时 |
+| `lesson03a-http-responses-and-sse.md` | HTTP 响应类型 & SSE 格式 | ex03 前 |
+| `lesson03b-async-await.md` | async/await 到底怎么回事 | ex03 台阶C 前 |
+| `lesson05a-rag-basics.md` | RAG 全部新概念一次讲清 | ex05 前 |
+
+> 编号规则：**讲义编号 = 它服务的练习编号 + 字母序**（lesson02a 服务于 ex02）。
+
+### exercises/（练习——动手写）
+
+| 练习 | 内容 | 状态 |
+|---|---|---|
+| `ex00-hello-llm/` | 第 1 课示例：第一次调用大模型 | ✅ |
+| `ex01-structured-output/` | 结构化信息提取器（Prompt + JSON） | ✅ |
+| `ex02-function-calling/` | Function Calling 库存查询助手 | ✅ |
+| `ex03-streaming-web/` | 流式输出 + FastAPI + 网页打字机 | ✅ |
+| `ex04-langchain/` | LangChain 框架重写（链/模板/流式） | ✅ |
+| `ex05-rag/` | RAG 实战：物资文档建库 + 问答 | ⏳ 进行中 |
+
+### solutions/（参考答案——先别看！）
+
+| 目录 | 内容 |
+|---|---|
+| `ex01-structured-output/` | 练习 01 参考答案 |
+| （ex02~ex05 陆续补充） | 每过一题补一份 |
 
 ## 学习模式（学员定调，重要）
 

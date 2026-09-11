@@ -8,8 +8,7 @@ r"""
 3. 跑通公司 New API 平台的第一次调用
 
 运行方式（在 llm-course 目录下）：
-    .venv\Scripts\Activate.ps1
-    python lessons/lesson01-first-call/hello_llm.py
+    python exercises/ex00-hello-llm/hello_llm.py
 """
 
 import os

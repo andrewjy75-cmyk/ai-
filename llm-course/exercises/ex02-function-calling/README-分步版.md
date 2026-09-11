@@ -31,11 +31,11 @@
 
 ## 前置知识
 
-`lessons/lesson01c-fc-preq.md` —— 字典嵌套 / json 模块 / while 循环 /
+`lessons/lesson02a-fc-prep.md` —— 字典嵌套 / json 模块 / while 循环 /
 SDK 响应对象取值 / 两回合协议全景图，末尾有 5 题自测。
 
 ## 顺序建议
 
-1. 先读 lesson01c-fc-preq.md，做对末尾自测
+1. 先读 lesson02a-fc-prep.md，做对末尾自测
 2. 台阶 A → 跑通 → 台阶 B → 跑通 → 台阶 C
 3. 每个台阶跑通都可以贴给我看，不用攒到最后
